@@ -8,6 +8,7 @@ import Home from "./pages/Web/Home"
 import Admindashboard from "./pages/Admin/Admindashboard"
 import Adminlayout from "./layout/Adminlayout"
 import AdminUsers from "./pages/Admin/AdminUsers"
+import AdminJobs from './pages/Admin/AdminJobs'
 import Register from "./pages/Web/Register"
 
   export default function App() {
@@ -29,6 +30,8 @@ import Register from "./pages/Web/Register"
         
          <Route path='/admindashboard' element={<Admindashboard/>}/>
          <Route path="/admin/users" element={<AdminUsers/>}/>
+      <Route path='admin/jobs' element={<AdminJobs />}/>
+         
        
       </Route>
     </Routes>
