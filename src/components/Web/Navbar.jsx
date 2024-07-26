@@ -1,5 +1,5 @@
 import React from 'react'
-import {ModeToggle} from '../mode-toggle';
+
 import { NavLink } from 'react-router-dom'
 
 const Navbar = () => {
@@ -25,9 +25,9 @@ const Navbar = () => {
     ]
     return (
         <div>
-            <div class="w-full h-[8vh]  flex flex-row justify-center items-center bg-primary/100">
+            <div class="w-full h-[8vh]  flex flex-row justify-center items-center bg-primary border-b-green-300">
                 {/* //logo */}
-                <div class='h-full w-1/4 flex flex-row justify-center items-center bg-primary/100 text-3x1 font-bold gap-10 text-white'>
+                <div class='h-full w-1/4 flex flex-row justify-center items-center bg-primary/100 text-2x1  font-bold gap-10 text-white'>
                     JobQuest
                 </div>
                 <div class='h-full w-3/4 flex flex-row justify-center items-center bg-primary/100 gap-10 text-white'>
@@ -40,7 +40,7 @@ const Navbar = () => {
                             </li>
                         ))
                     }
-                    <ModeToggle />
+                  
                 </div>
             </div>
 

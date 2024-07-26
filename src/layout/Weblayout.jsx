@@ -7,7 +7,7 @@ const Weblayout  =()=>{
 
     return(
         <>
-     <div className='h-screen w-screen overflow-hidden overflow-y-auto m-0 p-0'>
+     <div className='h-screen w-screen overflow-hidden overflow-y-auto m-0 p-0 bg-slate-50'>
      <Navbar/>
      <Outlet/>
      <Footer/>
