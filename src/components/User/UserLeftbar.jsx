@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Cog, Briefcase, Users, Power, UsersIcon } from 'lucide-react';
+import { LayoutDashboard,Star, Briefcase, Power, UsersIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const UserLeftbar = () => {
@@ -27,6 +27,11 @@ const UserLeftbar = () => {
             title: 'Profile',
             link: '/user/profile',
             icon: UsersIcon
+        },
+        {
+            title: 'Premium',
+            link: '/user/premium',
+            icon: Star
         }
         
     ];

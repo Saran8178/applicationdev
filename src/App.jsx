@@ -15,6 +15,8 @@ import Userdashboard from "./pages/User/Userdashboard"
 import Userjobs from "./pages/User/Userjobs"
 import Userprofile from "./pages/User/Userprofile"
 import UserResume from "./pages/User/UserResume"
+import UserPremium from "./pages/User/UserPremium"
+import UserFeedback from "./pages/User/UserFeedback"
 
 export default function App() {
   return (
@@ -43,7 +45,9 @@ export default function App() {
           <Route path="/user/jobs" element={<Userjobs />} />
           <Route path="/user/profile" element={<Userprofile />} />
           <Route path="/user/resume" element={<UserResume/>} />
+          <Route path="/user/premium" element={<UserPremium/>} />
         </Route>
+          <Route path="/user/feedback" element={<UserFeedback/>} />
       </Routes>
     </BrowserRouter>
     </>
