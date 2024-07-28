@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 
 const Register = () => {
   return (
-    <div className='h-full w-full flex justify-center items-center'>
+    <div className='h-full w-full flex justify-center items-center  bg-gray-200'>
       <Card className="w-1/4">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">Create your account</CardTitle>

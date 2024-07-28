@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Edit2 } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import EditProfile from './Editprofile';
 
 const UserProfile = () => {
@@ -29,14 +30,14 @@ const UserProfile = () => {
         </button>
       </div>
 
-      <div className='mt-10'> {/* Added margin to push content down */}
+      <div className='mt-10'>
         {editing ? (
           <EditProfile />
         ) : (
           <div>
-            <div className='border-t border-gray-200 pt-6'> {/* Increased padding-top */}
+            <div className='border-t border-gray-200 pt-6'>
               <h2 className='text-2xl font-semibold'>User Information</h2>
-              <div className='mt-6 space-y-2'> {/* Added margin-top */}
+              <div className='mt-6 space-y-2'>
                 <div>
                   <h3 className='font-medium'>Username</h3>
                   <p className='text-gray-600'>johndoe</p>
@@ -54,6 +55,16 @@ const UserProfile = () => {
                   <p className='text-gray-600'>1234 Elm Street, Springfield, IL</p>
                 </div>
               </div>
+            </div>
+            
+            {/* Add this section for navigating to the resume page */}
+            <div className='mt-6 text-center'>
+              <Link 
+                to='/user/resume' 
+                className='inline-block px-4 py-2 bg-gray-200 text-black rounded-md transition-colors font-semibold'
+              >
+                Add or Update Resume
+              </Link>
             </div>
           </div>
         )}
