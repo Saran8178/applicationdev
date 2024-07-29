@@ -15,19 +15,19 @@ const Login = () => {
     const isAuthenticated = await authenticateUser(email, password);
 
     if (isAuthenticated) {
-      // Conditional navigation based on email
+     
       if (email === 'admin@gmail.com') {
         navigate('/admindashboard');
       } else {
         navigate('/userdashboard');
       }
     } else {
-      // Handle login failure (show error message)
+     
       alert('Invalid email or password');
     }
   };
 
-  // Simulate an authentication function
+ 
   const authenticateUser = async (email, password) => {
     // Replace this with actual API call or authentication logic
     return email && password; // Just a dummy check for example
@@ -61,7 +61,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder='Enter your password'
+              placeholder='••••••••'
               className='w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12' // Adjust padding-right to make space for the icon
             />
             <button
