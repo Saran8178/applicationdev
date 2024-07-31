@@ -32,7 +32,7 @@ const Admindashboard = () => {
       icon: <FaChartBar className='text-3xl text-purple-500' />,
       title: 'Analytics',
       description: 'Review detailed analytics and reports to gain insights into system performance.',
-      link: '/analytics', // Add link for navigation
+      link: '/admin/barchart', // Add link for navigation
     },
     {
       icon: <FaEnvelope className='text-3xl text-orange-500' />,

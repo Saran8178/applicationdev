@@ -8,48 +8,48 @@ const JobsComponent = () => {
       company: 'Tech Corp',
       location: 'San Francisco, CA',
       status: 'Active',
-      postedDate: '2024-07-01',
-      applications: 120
+      description: 'Develop and maintain software applications.',
+      salary: '120,000 - 150,000 USD',
     },
     {
       title: 'Product Manager',
       company: 'Innovate Inc',
       location: 'New York, NY',
       status: 'Active',
-      postedDate: '2024-07-05',
-      applications: 80
+      description: 'Lead product development and manage the product lifecycle.',
+      salary: '100,000 - 130,000 USD',
     },
     {
       title: 'UX Designer',
       company: 'Design Co',
       location: 'Austin, TX',
       status: 'Inactive',
-      postedDate: '2024-06-20',
-      applications: 45
+      description: 'Design user interfaces and improve user experiences.',
+      salary: '80,000 - 110,000 USD',
     },
     {
       title: 'Data Scientist',
       company: 'Data Solutions',
       location: 'Seattle, WA',
       status: 'Active',
-      postedDate: '2024-07-10',
-      applications: 150
+      description: 'Analyze data to extract insights and support decision-making.',
+      salary: '115,000 - 140,000 USD',
     },
     {
       title: 'Marketing Specialist',
       company: 'MarketGuru',
       location: 'Chicago, IL',
       status: 'Active',
-      postedDate: '2024-07-15',
-      applications: 60
+      description: 'Develop and implement marketing strategies.',
+      salary: '70,000 - 90,000 USD',
     },
     {
       title: 'DevOps Engineer',
       company: 'CloudWorks',
       location: 'San Jose, CA',
       status: 'Closed',
-      postedDate: '2024-06-25',
-      applications: 30
+      description: 'Maintain and optimize cloud infrastructure and deployment processes.',
+      salary: '110,000 - 135,000 USD',
     },
   ];
 
@@ -62,9 +62,9 @@ const JobsComponent = () => {
     title: '',
     company: '',
     location: '',
-    status: '',
-    postedDate: '',
-    applications: ''
+    status: 'Active', // Default value
+    description: '',
+    salary: ''
   });
   const [jobToDelete, setJobToDelete] = useState(null);
 
@@ -77,7 +77,7 @@ const JobsComponent = () => {
 
     // Show toast notification if job is activated
     if (newStatus === 'Activated') {
-      setToast({ message: 'Job activated Successfully...', visible: true });
+      setToast({ message: 'Job activated successfully...', visible: true });
       setTimeout(() => setToast({ ...toast, visible: false }), 3000); // Hide toast after 3 seconds
     }
   };
@@ -91,8 +91,8 @@ const JobsComponent = () => {
       company: '',
       location: '',
       status: 'Active', // Default value
-      postedDate: '',
-      applications: ''
+      description: '',
+      salary: ''
     });
   };
 
@@ -189,8 +189,8 @@ const JobsComponent = () => {
               <th className="p-2 border-b">Company</th>
               <th className="p-2 border-b">Location</th>
               <th className="p-2 border-b">Status</th>
-              <th className="p-2 border-b">Posted Date</th>
-              <th className="p-2 border-b">Applications</th>
+              <th className="p-2 border-b">Description</th>
+              <th className="p-2 border-b">Salary</th>
               <th className="p-2 border-b">Actions</th>
             </tr>
           </thead>
@@ -201,8 +201,8 @@ const JobsComponent = () => {
                 <td className="p-2 border-b">{job.company}</td>
                 <td className="p-2 border-b">{job.location}</td>
                 <td className="p-2 border-b">{job.status}</td>
-                <td className="p-2 border-b">{job.postedDate}</td>
-                <td className="p-2 border-b">{job.applications}</td>
+                <td className="p-2 border-b">{job.description}</td>
+                <td className="p-2 border-b">{job.salary}</td>
                 <td className="p-2 border-b flex gap-2">
                   {/* Action buttons: Activate/Deactivate */}
                   {job.status === 'Closed' ? (
@@ -282,24 +282,24 @@ const JobsComponent = () => {
               </select>
             </div>
             <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Posted Date</label>
-              <input
-                type="date"
-                name="postedDate"
-                value={newJob.postedDate}
+              <label className="block mb-2 text-sm font-medium">Description</label>
+              <textarea
+                name="description"
+                value={newJob.description}
                 onChange={handleInputChange}
                 className="border p-2 rounded w-full"
+                placeholder="Job Description"
               />
             </div>
             <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Applications</label>
+              <label className="block mb-2 text-sm font-medium">Salary</label>
               <input
-                type="number"
-                name="applications"
-                value={newJob.applications}
+                type="text"
+                name="salary"
+                value={newJob.salary}
                 onChange={handleInputChange}
                 className="border p-2 rounded w-full"
-                placeholder="Number of Applications"
+                placeholder="Salary Package"
               />
             </div>
             <div className="flex justify-end gap-4">
@@ -332,8 +332,8 @@ const JobsComponent = () => {
                 <p><strong>Company:</strong> {jobToDelete.company}</p>
                 <p><strong>Location:</strong> {jobToDelete.location}</p>
                 <p><strong>Status:</strong> {jobToDelete.status}</p>
-                <p><strong>Posted Date:</strong> {jobToDelete.postedDate}</p>
-                <p><strong>Applications:</strong> {jobToDelete.applications}</p>
+                <p><strong>Description:</strong> {jobToDelete.description}</p>
+                <p><strong>Salary:</strong> {jobToDelete.salary}</p>
               </div>
             )}
             <div className="flex justify-end gap-4">

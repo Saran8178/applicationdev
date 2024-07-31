@@ -17,6 +17,7 @@ import Userprofile from "./pages/User/Userprofile"
 import UserResume from "./pages/User/UserResume"
 import UserPremium from "./pages/User/UserPremium"
 import UserFeedback from "./pages/User/UserFeedback"
+import Adminbarchart from "./pages/Admin/Adminbarchart"
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/admindashboard" element={<Admindashboard />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/jobs" element={<AdminJobs />} />
+          <Route path="/admin/barchart" element={<Adminbarchart />} />
         </Route>
 
         {/* User Routes */}

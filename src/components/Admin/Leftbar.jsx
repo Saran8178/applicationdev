@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Cog, Briefcase, Users, Power } from 'lucide-react';
+import { LayoutDashboard, Cog, Briefcase, Users, LogOut } from 'lucide-react'; // Import the LogOut icon
 import { Button } from '../ui/button';
 
 const Leftbar = () => {
@@ -62,7 +62,7 @@ const Leftbar = () => {
                     onClick={handleLogout}
                 >
                     <span className='flex flex-row items-center justify-start h-full w-full gap-2 text-red-500'>
-                        <Power size={20} />
+                        <LogOut size={20} /> {/* Changed icon here */}
                         Logout
                     </span>
                 </Button>
