@@ -1,360 +1,120 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import axios from 'axios';
+import { Edit, Trash } from 'lucide-react'; // Import icons from lucide-react
 
-const JobsComponent = () => {
-  // Sample job data
-  const initialJobs = [
-    {
-      title: 'Software Engineer',
-      company: 'Tech Corp',
-      location: 'San Francisco, CA',
-      status: 'Active',
-      description: 'Develop and maintain software applications.',
-      salary: '120,000 - 150,000 USD',
-    },
-    {
-      title: 'Product Manager',
-      company: 'Innovate Inc',
-      location: 'New York, NY',
-      status: 'Active',
-      description: 'Lead product development and manage the product lifecycle.',
-      salary: '100,000 - 130,000 USD',
-    },
-    {
-      title: 'UX Designer',
-      company: 'Design Co',
-      location: 'Austin, TX',
-      status: 'Inactive',
-      description: 'Design user interfaces and improve user experiences.',
-      salary: '80,000 - 110,000 USD',
-    },
-    {
-      title: 'Data Scientist',
-      company: 'Data Solutions',
-      location: 'Seattle, WA',
-      status: 'Active',
-      description: 'Analyze data to extract insights and support decision-making.',
-      salary: '115,000 - 140,000 USD',
-    },
-    {
-      title: 'Marketing Specialist',
-      company: 'MarketGuru',
-      location: 'Chicago, IL',
-      status: 'Active',
-      description: 'Develop and implement marketing strategies.',
-      salary: '70,000 - 90,000 USD',
-    },
-    {
-      title: 'DevOps Engineer',
-      company: 'CloudWorks',
-      location: 'San Jose, CA',
-      status: 'Closed',
-      description: 'Maintain and optimize cloud infrastructure and deployment processes.',
-      salary: '110,000 - 135,000 USD',
-    },
-  ];
+const AdminJobs = () => {
+  const [jobs, setJobs] = useState([]);
+  const [error, setError] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  // State to manage job list, toast visibility, and modal visibility
-  const [jobs, setJobs] = useState(initialJobs);
-  const [toast, setToast] = useState({ message: '', visible: false });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [newJob, setNewJob] = useState({
-    title: '',
-    company: '',
-    location: '',
-    status: 'Active', // Default value
-    description: '',
-    salary: ''
-  });
-  const [jobToDelete, setJobToDelete] = useState(null);
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const role = localStorage.getItem('role');
+      const token = localStorage.getItem('token');
 
-  // Handler to toggle job status between Active and Inactive
-  const toggleStatus = (index) => {
-    const updatedJobs = [...jobs];
-    const newStatus = updatedJobs[index].status === 'Active' ? 'Activated' : 'Active';
-    updatedJobs[index].status = newStatus;
-    setJobs(updatedJobs);
+      if (role === 'ADMIN' && token) {
+        try {
+          const response = await axios.get('http://localhost:7777/api/auth', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          setJobs(response.data);
+        } catch (error) {
+          console.error('Error fetching jobs:', error);
+          setError('Failed to fetch jobs.');
+        }
+      } else {
+        setError('You do not have permission to view this page or missing token.');
+      }
+    };
 
-    // Show toast notification if job is activated
-    if (newStatus === 'Activated') {
-      setToast({ message: 'Job activated successfully...', visible: true });
-      setTimeout(() => setToast({ ...toast, visible: false }), 3000); // Hide toast after 3 seconds
+    fetchJobs();
+  }, []);
+
+  const handleAddJob = () => {
+    navigate('/admin/jobform'); // Navigate to job form page
+  };
+
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        await axios.delete(`http://localhost:7777/api/auth/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        // Remove deleted job from the state
+        setJobs(jobs.filter(job => job.id !== id));
+      } catch (error) {
+        console.error('Error deleting job:', error);
+        setError('Failed to delete job.');
+      }
+    } else {
+      setError('Missing token.');
     }
   };
 
-  // Handler to open modal
-  const openModal = () => {
-    setIsModalOpen(true);
-    // Reset new job form
-    setNewJob({
-      title: '',
-      company: '',
-      location: '',
-      status: 'Active', // Default value
-      description: '',
-      salary: ''
-    });
-  };
-
-  // Handler to close modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // Handle input changes in the modal
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewJob({ ...newJob, [name]: value });
-  };
-
-  // Handle confirm button click
-  const handleConfirm = () => {
-    setJobs([...jobs, newJob]); // Add the new job to the list
-    closeModal(); // Close the modal
-    setToast({ message: 'Job added successfully!', visible: true });
-    setTimeout(() => setToast({ ...toast, visible: false }), 3000); // Hide toast after 3 seconds
-  };
-
-  // Handle delete button click
-  const handleDelete = (index) => {
-    setJobToDelete(jobs[index]);
-    setIsDeleteModalOpen(true);
-  };
-
-  // Handle confirm delete
-  const handleConfirmDelete = () => {
-    setJobs(jobs.filter(job => job !== jobToDelete));
-    setIsDeleteModalOpen(false);
-    setToast({ message: 'Job deleted successfully!', visible: true });
-    setTimeout(() => setToast({ ...toast, visible: false }), 3000); // Hide toast after 3 seconds
-  };
-
-  // Handle cancel delete
-  const handleCancelDelete = () => {
-    setIsDeleteModalOpen(false);
-  };
-
   return (
-    <div className="p-4">
-      {/* Toast Notification */}
-      {toast.visible && (
-        <div className="fixed top-0 right-0 mt-4 mr-4 bg-black text-white px-4 py-2 rounded shadow-lg">
-          {toast.message}
-        </div>
-      )}
-
-      {/* Header with Add Job button */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">Job Listings</h2>
+    <div className='p-6'>
+      <div className='flex justify-end mb-4'>
         <button
-          className="bg-green-400 text-white px-4 py-2 rounded"
-          onClick={openModal}
+          onClick={handleAddJob}
+          className='bg-blue-500 text-white py-2 px-4 rounded-lg flex items-center'
         >
-          Add Job
+          <span className='mr-2'>Add Job</span>
+          {/* Optionally include an icon */}
         </button>
       </div>
-
-      {/* Search and Filter */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="border p-2 rounded w-full mb-2"
-        />
-        <div className="flex gap-4">
-          <select className="border p-2 rounded">
-            <option value="">Filter by Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-            <option value="Closed">Closed</option>
-          </select>
-          <select className="border p-2 rounded">
-            <option value="">Filter by Location</option>
-            <option value="San Francisco, CA">San Francisco, CA</option>
-            <option value="New York, NY">New York, NY</option>
-            <option value="Austin, TX">Austin, TX</option>
-            <option value="Seattle, WA">Seattle, WA</option>
-            <option value="Chicago, IL">Chicago, IL</option>
-            <option value="San Jose, CA">San Jose, CA</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Job Listing Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
+      {error && <p className='text-red-500'>{error}</p>}
+      {jobs.length > 0 ? (
+        <table className='min-w-full bg-white border border-gray-300 rounded-lg shadow-md'>
+          <thead className='bg-gray-100 border-b'>
             <tr>
-              <th className="p-2 border-b">Job Title</th>
-              <th className="p-2 border-b">Company</th>
-              <th className="p-2 border-b">Location</th>
-              <th className="p-2 border-b">Status</th>
-              <th className="p-2 border-b">Description</th>
-              <th className="p-2 border-b">Salary</th>
-              <th className="p-2 border-b">Actions</th>
+              <th className='py-2 px-4 text-left text-gray-600'>ID</th>
+              <th className='py-2 px-4 text-left text-gray-600'>Title</th>
+              <th className='py-2 px-4 text-left text-gray-600'>Description</th>
+              <th className='py-2 px-4 text-left text-gray-600'>Location</th>
+              <th className='py-2 px-4 text-left text-gray-600'>Status</th>
+              <th className='py-2 px-4 text-left text-gray-600'>Salary</th>
+              <th className='py-2 px-4 text-left text-gray-600'>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {jobs.map((job, index) => (
-              <tr key={index}>
-                <td className="p-2 border-b">{job.title}</td>
-                <td className="p-2 border-b">{job.company}</td>
-                <td className="p-2 border-b">{job.location}</td>
-                <td className="p-2 border-b">{job.status}</td>
-                <td className="p-2 border-b">{job.description}</td>
-                <td className="p-2 border-b">{job.salary}</td>
-                <td className="p-2 border-b flex gap-2">
-                  {/* Action buttons: Activate/Deactivate */}
-                  {job.status === 'Closed' ? (
-                    <button className="bg-gray-500 text-white px-4 py-1 rounded" disabled>Deactivated</button>
-                  ) : (
-                    <button
-                      className={`px-4 py-1 rounded ${
-                        job.status === 'Active' ? 'bg-green-500 text-white' : 'bg-red-400 text-black'
-                      }`}
-                      onClick={() => toggleStatus(index)}
-                    >
-                      {job.status === 'Active' ? 'Activate' : 'Deactivate'}
-                    </button>
-                  )}
+            {jobs.map((job) => (
+              <tr key={job.id} className='border-b'>
+                <td className='py-2 px-4'>{job.id}</td>
+                <td className='py-2 px-4'>{job.title}</td>
+                <td className='py-2 px-4'>{job.description}</td>
+                <td className='py-2 px-4'>{job.location}</td>
+                <td className='py-2 px-4'>{job.status}</td>
+                <td className='py-2 px-4'>{job.salary}</td>
+                <td className='py-2 px-4 flex space-x-2'>
                   <button
-                    className="bg-red-500 text-white px-4 py-1 rounded"
-                    onClick={() => handleDelete(index)}
+                    className='text-blue-500 hover:text-blue-700'
+                    onClick={() => navigate(`/admin/editjob/${job.id}`)}
                   >
-                    Delete
+                    <Edit className='w-5 h-5' />
+                  </button>
+                  <button
+                    className='text-red-500 hover:text-red-700'
+                    onClick={() => handleDelete(job.id)}
+                  >
+                    <Trash className='w-5 h-5' />
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
-
-      {/* Modal for Adding Job */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full">
-            <h3 className="text-xl font-semibold mb-4">Add New Job</h3>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Job Title</label>
-              <input
-                type="text"
-                name="title"
-                value={newJob.title}
-                onChange={handleInputChange}
-                className="border p-2 rounded w-full"
-                placeholder="Job Title"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Company</label>
-              <input
-                type="text"
-                name="company"
-                value={newJob.company}
-                onChange={handleInputChange}
-                className="border p-2 rounded w-full"
-                placeholder="Company"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Location</label>
-              <input
-                type="text"
-                name="location"
-                value={newJob.location}
-                onChange={handleInputChange}
-                className="border p-2 rounded w-full"
-                placeholder="Location"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Status</label>
-              <select
-                name="status"
-                value={newJob.status}
-                onChange={handleInputChange}
-                className="border p-2 rounded w-full"
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                <option value="Closed">Closed</option>
-              </select>
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Description</label>
-              <textarea
-                name="description"
-                value={newJob.description}
-                onChange={handleInputChange}
-                className="border p-2 rounded w-full"
-                placeholder="Job Description"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Salary</label>
-              <input
-                type="text"
-                name="salary"
-                value={newJob.salary}
-                onChange={handleInputChange}
-                className="border p-2 rounded w-full"
-                placeholder="Salary Package"
-              />
-            </div>
-            <div className="flex justify-end gap-4">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={handleConfirm}
-              >
-                Confirm
-              </button>
-              <button
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-                onClick={closeModal}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal for Confirming Deletion */}
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h3 className="text-xl font-semibold mb-4">Confirm Delete</h3>
-            <p className="mb-4">Are you sure you want to delete the following job?</p>
-            {jobToDelete && (
-              <div className="mb-4">
-                <p><strong>Job Title:</strong> {jobToDelete.title}</p>
-                <p><strong>Company:</strong> {jobToDelete.company}</p>
-                <p><strong>Location:</strong> {jobToDelete.location}</p>
-                <p><strong>Status:</strong> {jobToDelete.status}</p>
-                <p><strong>Description:</strong> {jobToDelete.description}</p>
-                <p><strong>Salary:</strong> {jobToDelete.salary}</p>
-              </div>
-            )}
-            <div className="flex justify-end gap-4">
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded"
-                onClick={handleConfirmDelete}
-              >
-                Delete
-              </button>
-              <button
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-                onClick={handleCancelDelete}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+      ) : (
+        <p>No jobs available.</p>
       )}
     </div>
   );
 };
 
-export default JobsComponent;
+export default AdminJobs;

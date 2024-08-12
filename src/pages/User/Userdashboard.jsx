@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Briefcase, Heart, User } from 'lucide-react'; // Importing icons from lucide-react
 
 const Userdashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    // Retrieve user data from local storage
+    const storedUsername = localStorage.getItem('userName'); // Correct key for username
+    console.log('Stored username:', storedUsername); // Debugging line
+
+    if (storedUsername) {
+      setUsername(storedUsername);
+    } else {
+      console.log('Username not found in local storage'); // Debugging line
+    }
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -25,7 +38,7 @@ const Userdashboard = () => {
     <div className='p-6'>
       {/* Welcome Section */}
       <section className='mb-6'>
-        <h1 className='text-3xl font-bold mb-4'>Welcome back, User!</h1>
+        <h1 className='text-3xl font-bold mb-4'>Welcome back, {username || 'User'}!</h1>
         <p className='text-gray-600'>
           Here's a summary of your recent activity and notifications.
         </p>
@@ -44,7 +57,11 @@ const Userdashboard = () => {
               className='p-2 w-full border border-gray-300 rounded-lg'
             />
           </div>
-         
+          <ul>
+            {filteredActivities.map((activity, index) => (
+              <li key={index} className='mb-2'>{activity}</li>
+            ))}
+          </ul>
         </div>
       </section>
 

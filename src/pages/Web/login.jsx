@@ -1,49 +1,57 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:7777/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post('http://localhost:7777/api/auth/login', {
+        email,
+        password
       });
 
-      const contentType = response.headers.get('content-type');
-      let data;
+      const { token, name, role } = response.data;
 
-      if (contentType && contentType.includes('application/json')) {
-        data = await response.json();
+      console.log('Login response:', response.data); // Log the entire response data
+
+      // Store token, name, and role in localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('name', name);
+      localStorage.setItem('role', role);
+
+      // Log true to the console upon successful login
+      console.log(true);
+
+      // Navigate based on role
+      if (role === 'ADMIN') {
+        navigate('/admindashboard');
       } else {
-        throw new Error('Invalid JSON response');
-      }
-
-      if (response.ok) {
-        const { token, name } = data; // Assuming the backend returns token and name
-
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('userName', name); // Store user's name
-
-        const isAdmin = email === 'admin@gmail.com';
-        navigate(isAdmin ? '/admindashboard' : '/userdashboard');
-      } else {
-        alert('Invalid email or password');
+        navigate('/userdashboard');
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      alert('An error occurred during login. Please try again.');
+      console.error('Login error:', error.response || error.message); // Log error details
+      setError('Invalid email or password');
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('name');
+    localStorage.removeItem('role');
+
+    // Log false to the console upon logout
+    console.log(false);
+
+    navigate('/login');
   };
 
   return (
@@ -53,9 +61,10 @@ const Login = () => {
           <Users className='h-10 w-10 text-black mr-3' />
           <h2 className='text-3xl font-semibold text-gray-800'>Login</h2>
         </div>
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className='mb-6'>
-            <label htmlFor='email' className='block text-gray-700 text-sm font-medium mb=2'>Email</label>
+            <label htmlFor='email' className='block text-gray-700 text-sm font-medium mb-2'>Email</label>
             <input
               id='email'
               type='email'
@@ -67,7 +76,7 @@ const Login = () => {
             />
           </div>
           <div className='mb-6 relative'>
-            <label htmlFor='password' className='block text-gray-700 text-sm font-medium mb=2'>Password</label>
+            <label htmlFor='password' className='block text-gray-700 text-sm font-medium mb-2'>Password</label>
             <input
               id='password'
               type={showPassword ? 'text' : 'password'}
