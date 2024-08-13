@@ -20,6 +20,7 @@ import UserFeedback from "./pages/User/UserFeedback"
 import Adminbarchart from "./pages/Admin/Adminbarchart"
 import AdminJobForm from "./pages/Admin/AdminJobform"
 import AdminApplication from "./pages/Admin/Adminapplication"
+import Userform from "./pages/User/Userform"
 
 export default function App() {
   return (
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/user/profile" element={<Userprofile />} />
           <Route path="/user/resume" element={<UserResume/>} />
           <Route path="/user/premium" element={<UserPremium/>} />
+          <Route path="/user/form" element={<Userform/>} />
         </Route>
           <Route path="/user/feedback" element={<UserFeedback/>} />
       </Routes>

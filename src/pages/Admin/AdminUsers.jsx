@@ -74,7 +74,7 @@ const AdminUsers = () => {
             <TableHead className="font-bold text-lg text-black">Email</TableHead>
             <TableHead className="font-bold text-lg text-black">Phone</TableHead>
             <TableHead className="font-bold text-lg text-black">Address</TableHead>
-            <TableHead className="font-bold text-lg text-black">Company Name</TableHead>
+            <TableHead className="font-bold text-lg text-black">Job Title</TableHead>
             <TableHead className="font-bold text-lg text-black">Status</TableHead>
             {/* <TableHead>Actions</TableHead> */}
           </TableRow>

@@ -10,7 +10,7 @@ const UserProfile = () => {
   const handleEditClick = () => {
     setEditing(!editing);
   };
-
+  
   return (
     <div className='max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md'>
       <div className='flex items-center mb-6'>
